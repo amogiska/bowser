@@ -189,7 +189,7 @@ public class WebServer {
     return head;
   }
 
-  private void handle(Request request, Response response) {
+  public void handle(Request request, Response response) {
     RequestHandler lastHandler = null;
     try {
       boolean handled = false;
