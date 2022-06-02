@@ -31,6 +31,7 @@ import bowser.misc.CacheBuster;
 import bowser.misc.DefaultWebLogger;
 import bowser.misc.UserReadableError;
 import bowser.misc.WebLogger;
+import bowser.model.BulkRequestHandler;
 import bowser.model.Controller;
 import bowser.model.Request;
 import bowser.model.RequestHandler;
@@ -39,6 +40,7 @@ import bowser.model.Route;
 import bowser.node.DomNode;
 import bowser.node.Head;
 import bowser.template.Template;
+
 import ox.Log;
 import ox.Threads;
 import ox.x.XList;
@@ -65,6 +67,7 @@ public class WebServer {
 
   private RequestHandler notFoundHandler = null;
   private ExceptionHandler exceptionHandler = (a, b, c) -> false;
+  private BulkRequestHandler bulkRequestHandler = null;
 
   private final Head head;
 
@@ -113,6 +116,11 @@ public class WebServer {
    */
   public WebServer exceptionHandler(ExceptionHandler handler) {
     this.exceptionHandler = checkNotNull(handler);
+    return this;
+  }
+
+  public WebServer bulkRequestHandler(BulkRequestHandler handler) {
+    this.bulkRequestHandler = handler;
     return this;
   }
 
@@ -199,6 +207,8 @@ public class WebServer {
       if (s.contains("gzip")) {
         response.setCompressed(true);
       }
+
+      bulkRequestHandler.process(null, response);
 
       for (RequestHandler handler : handlers) {
         lastHandler = handler;
