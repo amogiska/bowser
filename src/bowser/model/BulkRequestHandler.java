@@ -2,13 +2,13 @@ package bowser.model;
 
 import java.util.List;
 
+import ox.Json;
+
 public abstract class BulkRequestHandler extends Controller {
 
   public abstract void setup();
 
   public abstract void tearDown();
-
-  public abstract List<Request> requests();
 
   public boolean process(List<Request> requests, Response response) {
     setup();
@@ -18,5 +18,9 @@ public abstract class BulkRequestHandler extends Controller {
     tearDown();
     return true;
   }
+
+  public abstract void setup(Handler handler);
+
+  public abstract void getRequests(Json[] unprocessedRequests);
 
 }
